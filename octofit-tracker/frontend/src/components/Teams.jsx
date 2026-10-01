@@ -10,7 +10,7 @@ export default function Teams() {
       columns={[
         { label: 'Team', render: (record) => <strong>{record.name || 'Unnamed team'}</strong> },
         { label: 'Members', render: (record) => record.members?.length ?? 0 },
-        { label: 'Members', render: (record) => record.members?.length ? record.members.map((member) => String(member?.username || member?._id || member).slice(-6)).join(', ') : '—' },
+        { label: 'Member IDs', render: (record) => record.members?.length ? record.members.map((member) => String(member?.username || member?._id || member).slice(-6)).join(', ') : '—' },
       ]}
     />
   )
