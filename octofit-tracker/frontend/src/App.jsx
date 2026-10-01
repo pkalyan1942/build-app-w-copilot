@@ -1,52 +1,64 @@
-import { useEffect, useState } from 'react'
+import { NavLink, Navigate, Route, Routes } from 'react-router-dom'
 import octofitLogo from '../../../docs/octofitapp-small.png'
+import Activities from './components/Activities.jsx'
+import Leaderboard from './components/Leaderboard.jsx'
+import Teams from './components/Teams.jsx'
+import Users from './components/Users.jsx'
+import Workouts from './components/Workouts.jsx'
+import { API_BASE_URL } from './api.js'
+
+const sections = [
+  { label: 'Members', path: '/users' },
+  { label: 'Teams', path: '/teams' },
+  { label: 'Activities', path: '/activities' },
+  { label: 'Leaderboard', path: '/leaderboard' },
+  { label: 'Workouts', path: '/workouts' },
+]
 
 function App() {
-  const [apiStatus, setApiStatus] = useState('Checking')
-
-  useEffect(() => {
-    const controller = new AbortController()
-
-    fetch('/api/health', { signal: controller.signal })
-      .then((response) => {
-        if (!response.ok) throw new Error('API request failed')
-        return response.json()
-      })
-      .then(() => setApiStatus('Connected'))
-      .catch((error) => {
-        if (error.name !== 'AbortError') setApiStatus('Unavailable')
-      })
-
-    return () => controller.abort()
-  }, [])
-
   return (
-    <main className="container py-5">
-      <header className="d-flex align-items-center gap-3 border-bottom pb-4 mb-5">
-        <img src={octofitLogo} width="48" height="48" alt="OctoFit" />
-        <div>
-          <p className="small text-uppercase fw-semibold text-success mb-1">OctoFit</p>
-          <h1 className="h4 mb-0">Tracker</h1>
+    <div className="app-shell">
+      <header className="app-header">
+        <div className="app-header-inner">
+          <NavLink className="brand-lockup" to="/users" aria-label="OctoFit Tracker home">
+            <img src={octofitLogo} width="42" height="42" alt="" />
+            <span className="brand-name">OctoFit<span>TRACKER</span></span>
+          </NavLink>
+          <div className="api-indicator" title={API_BASE_URL || 'Using the local Vite API proxy'}>
+            <span className="api-indicator-dot" />
+            {API_BASE_URL ? 'CODESPACE API' : 'LOCAL API'}
+          </div>
         </div>
       </header>
 
-      <section className="row align-items-center gy-5">
-        <div className="col-lg-8">
-          <p className="small text-uppercase fw-semibold text-success">Training, connected</p>
-          <h2 className="display-5 fw-semibold">Your fitness, in motion.</h2>
-          <p className="lead text-body-secondary mt-3 mb-0">
-            Your OctoFit Tracker workspace is ready.
-          </p>
-        </div>
-        <div className="col-lg-4">
-          <div className="border-start border-3 border-success ps-3">
-            <p className="small text-uppercase fw-semibold text-body-secondary mb-1">API service</p>
-            <p className="h5 mb-1" role="status">{apiStatus}</p>
-            <code>/api/health</code>
+      <main className="app-main">
+        <section className="page-heading">
+          <div>
+            <p className="eyebrow">TRAINING NETWORK <span>/</span> OVERVIEW</p>
+            <h1>Move together.</h1>
           </div>
-        </div>
-      </section>
-    </main>
+          <p className="page-intro">People, progress, and plans from across your OctoFit community.</p>
+        </section>
+
+        <nav className="section-nav" aria-label="Tracker sections">
+          {sections.map(({ label, path }) => (
+            <NavLink key={path} className={({ isActive }) => `section-link${isActive ? ' active' : ''}`} to={path}>
+              {label}
+            </NavLink>
+          ))}
+        </nav>
+
+        <Routes>
+          <Route path="/" element={<Navigate to="/users" replace />} />
+          <Route path="/users" element={<Users />} />
+          <Route path="/teams" element={<Teams />} />
+          <Route path="/activities" element={<Activities />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/workouts" element={<Workouts />} />
+          <Route path="*" element={<Navigate to="/users" replace />} />
+        </Routes>
+      </main>
+    </div>
   )
 }
 

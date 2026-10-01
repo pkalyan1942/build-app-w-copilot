@@ -1,13 +1,22 @@
 import './config/database.js'
+import cors from 'cors'
 import express from 'express'
 import { activitiesRouter, leaderboardRouter, teamsRouter, usersRouter, workoutsRouter } from './routes.js'
 
 const app = express()
 const port = 8000
-const apiBaseUrl = process.env.CODESPACE_NAME
-  ? `https://${process.env.CODESPACE_NAME}-8000.app.github.dev`
+const codespaceName = process.env.CODESPACE_NAME
+const apiBaseUrl = codespaceName
+  ? `https://${codespaceName}-8000.app.github.dev`
   : 'http://localhost:8000'
+const frontendOrigins = new Set(['http://localhost:5173', 'http://127.0.0.1:5173'])
+if (codespaceName) frontendOrigins.add(`https://${codespaceName}-5173.app.github.dev`)
 
+app.use(cors({
+  origin: (origin, callback) => callback(null, Boolean(origin && frontendOrigins.has(origin))),
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}))
 app.use(express.json())
 
 app.get('/api/health', (_request, response) => {
