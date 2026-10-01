@@ -1,6 +1,7 @@
 import CollectionScreen from './CollectionScreen.jsx'
 import { displayReference } from '../formatters.js'
 
+// fetchCollection resolves this to https://<VITE_CODESPACE_NAME>-8000.app.github.dev/api/leaderboard/ in Codespaces.
 export default function Leaderboard() {
   return (
     <CollectionScreen

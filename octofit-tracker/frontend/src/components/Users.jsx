@@ -1,5 +1,6 @@
 import CollectionScreen from './CollectionScreen.jsx'
 
+// fetchCollection resolves this to https://<VITE_CODESPACE_NAME>-8000.app.github.dev/api/users/ in Codespaces.
 export default function Users() {
   return (
     <CollectionScreen

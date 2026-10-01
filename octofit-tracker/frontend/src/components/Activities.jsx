@@ -1,6 +1,7 @@
 import CollectionScreen from './CollectionScreen.jsx'
 import { displayReference } from '../formatters.js'
 
+// fetchCollection resolves this to https://<VITE_CODESPACE_NAME>-8000.app.github.dev/api/activities/ in Codespaces.
 function formatDate(value) {
   if (!value) return '—'
   const date = new Date(value)
